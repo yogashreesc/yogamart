@@ -13,12 +13,4 @@ public interface ProductDAO {
     Optional<Product> findById(int id) throws SQLException;
 
     List<Product> search(String keyword, String category) throws SQLException;
-
-    Product create(Product product) throws SQLException;
-
-    List<Product> findBySeller(int sellerId) throws SQLException;
-
-    boolean update(Product product) throws SQLException;
-
-    boolean delete(int id, int sellerId) throws SQLException;
 }
