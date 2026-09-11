@@ -28,6 +28,9 @@
     <div>
         Signed in as <strong><c:out value="${sessionScope.userName}"/></strong>
         (<c:out value="${sessionScope.userRole}"/>) &middot;
+        <c:if test="${sessionScope.userRole == 'SELLER' || sessionScope.userRole == 'ADMIN'}">
+            <a href="${pageContext.request.contextPath}/seller/products">My Products</a> &middot;
+        </c:if>
         <a class="logout" href="${pageContext.request.contextPath}/logout">Log out</a>
     </div>
 </header>
