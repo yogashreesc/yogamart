@@ -5,43 +5,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Login - YogaMart</title>
-    <style>
-        body { font-family: system-ui, sans-serif; max-width: 400px; margin: 60px auto; padding: 0 20px; }
-        h1 { color: #2c7a4b; }
-        label { display: block; margin-top: 12px; font-weight: 600; }
-        input { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
-        button { margin-top: 20px; padding: 10px 20px; background: #2c7a4b; color: white; border: none; cursor: pointer; }
-        .error { color: #b00020; margin-top: 12px; }
-        .success { color: #2c7a4b; margin-top: 12px; }
-        .muted { font-size: 0.85em; color: #666; margin-top: 20px; }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/site.css">
 </head>
 <body>
-<h1>YogaMart</h1>
-<p>Health essentials marketplace — log in to continue.</p>
+<div class="form-card">
+    <div class="logo-header">
+        <img class="logo" src="${pageContext.request.contextPath}/assets/img/logo.png" alt="YogaMart">
+        <h1>YogaMart</h1>
+    </div>
+    <p class="tagline">Health essentials marketplace — log in to continue.</p>
 
-<c:if test="${not empty error}">
-    <p class="error">${error}</p>
-</c:if>
-<c:if test="${not empty success}">
-    <p class="success">${success}</p>
-</c:if>
+    <c:if test="${not empty error}">
+        <p class="error">${error}</p>
+    </c:if>
+    <c:if test="${not empty success}">
+        <p class="success">${success}</p>
+    </c:if>
 
-<form method="post" action="${pageContext.request.contextPath}/login">
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required>
+    <form method="post" action="${pageContext.request.contextPath}/login">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
 
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
 
-    <button type="submit">Log In</button>
-</form>
+        <button type="submit">Log In</button>
+    </form>
 
-<p>Don't have an account? <a href="${pageContext.request.contextPath}/register">Register here</a>.</p>
+    <p>Don't have an account? <a href="${pageContext.request.contextPath}/register">Register here</a>.</p>
 
-<p class="muted">
-    Demo accounts — Seller: seller@yogamart.local / Seller@123 &middot;
-    Admin: admin@yogamart.local / Admin@123
-</p>
+    <p class="muted">
+        Demo accounts — Seller: seller@yogamart.local / Seller@123 &middot;
+        Admin: admin@yogamart.local / Admin@123
+    </p>
+</div>
 </body>
 </html>
