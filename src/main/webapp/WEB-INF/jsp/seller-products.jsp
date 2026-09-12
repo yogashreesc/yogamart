@@ -1,74 +1,69 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>My Products - YogaMart</title>
-    <style>
-        body { font-family: system-ui, sans-serif; max-width: 900px; margin: 30px auto; padding: 0 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2c7a4b; padding-bottom: 10px; }
-        h1 { color: #2c7a4b; margin: 0; }
-        table { width: 100%; border-collapse: collapse; margin-top: 24px; }
-        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #ddd; }
-        th { color: #555; font-size: 0.85em; text-transform: uppercase; }
-        .price { color: #2c7a4b; font-weight: 700; }
-        a.action { margin-right: 10px; text-decoration: none; color: #2c7a4b; }
-        a.delete { color: #b00020; }
-        .error { color: #b00020; margin-top: 12px; }
-        a.add-link { display: inline-block; margin-top: 16px; }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/site.css">
 </head>
 <body>
-<header>
-    <h1>My Products</h1>
-    <div>
-        Signed in as <strong><c:out value="${sessionScope.userName}"/></strong>
-        (<c:out value="${sessionScope.userRole}"/>) &middot;
-        <a href="${pageContext.request.contextPath}/products">Browse</a> &middot;
-        <a class="logout" href="${pageContext.request.contextPath}/logout">Log out</a>
+<header class="site-header">
+    <div class="wrap bar">
+        <a class="brand" href="${pageContext.request.contextPath}/products"><img class="logo" src="${pageContext.request.contextPath}/assets/img/logo.png" alt="YogaMart">YogaMart</a>
+        <div class="nav-links">
+            <span>Hi, <strong><c:out value="${sessionScope.userName}"/></strong></span>
+            <span class="pill-role"><c:out value="${sessionScope.userRole}"/></span>
+            <a href="${pageContext.request.contextPath}/products">Browse</a>
+            <a class="logout" href="${pageContext.request.contextPath}/logout">Log out</a>
+        </div>
     </div>
 </header>
 
-<c:if test="${not empty error}">
-    <p class="error">${error}</p>
-</c:if>
+<div class="wrap">
+    <h1 class="section-title" style="margin-top:28px;">My Products</h1>
 
-<a class="add-link" href="${pageContext.request.contextPath}/seller/add-product">+ Add New Product</a>
+    <c:if test="${not empty error}">
+        <p class="error">${error}</p>
+    </c:if>
 
-<table>
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach var="p" items="${products}">
+    <a class="btn add-link" href="${pageContext.request.contextPath}/seller/add-product">+ Add New Product</a>
+
+    <table class="seller-table">
+        <thead>
         <tr>
-            <td><c:out value="${p.name}"/></td>
-            <td><c:out value="${p.category}"/></td>
-            <td class="price">&#8377;<c:out value="${p.price}"/></td>
-            <td><c:out value="${p.stockQty}"/></td>
-            <td>
-                <a class="action" href="${pageContext.request.contextPath}/seller/edit-product?id=${p.id}">Edit</a>
-                <form action="${pageContext.request.contextPath}/seller/delete-product" method="post" style="display:inline"
-                      onsubmit="return confirm('Delete this product? This cannot be undone.');">
-                    <input type="hidden" name="id" value="${p.id}">
-                    <button type="submit" class="action delete" style="background:none;border:none;cursor:pointer;padding:0;font:inherit;">Delete</button>
-                </form>
-            </td>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Actions</th>
         </tr>
-    </c:forEach>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        <c:forEach var="p" items="${products}">
+            <tr>
+                <td><c:out value="${p.name}"/></td>
+                <td><c:out value="${p.category}"/></td>
+                <td class="price">&#8377;<c:out value="${p.price}"/></td>
+                <td><c:out value="${p.stockQty}"/></td>
+                <td>
+                    <a class="action" href="${pageContext.request.contextPath}/seller/edit-product?id=${p.id}">Edit</a>
+                    <form action="${pageContext.request.contextPath}/seller/delete-product" method="post" style="display:inline"
+                          onsubmit="return confirm('Delete this product? This cannot be undone.');">
+                        <input type="hidden" name="id" value="${p.id}">
+                        <button type="submit" class="action delete-link" style="background:none;border:none;cursor:pointer;padding:0;font:inherit;margin-top:0;">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
 
-<c:if test="${empty products}">
-    <p>You haven't listed any products yet.</p>
-</c:if>
+    <c:if test="${empty products}">
+        <div class="empty-state">
+            <p>You haven't listed any products yet.</p>
+        </div>
+    </c:if>
+</div>
 </body>
 </html>
