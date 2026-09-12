@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -53,7 +55,9 @@ public class AppContextListener implements ServletContextListener {
         try {
             runScript(dataSource, "/schema.sql");
             seedUsersIfEmpty(dataSource);
-            runScript(dataSource, "/seed.sql");
+            seedProductsIfEmpty(dataSource);
+            deduplicateProducts(dataSource);
+            refreshSeedProductImagesAndAddNew(dataSource);
             log.info("YogaMart: schema initialized and seed data loaded.");
         } catch (SQLException | IOException e) {
             log.error("YogaMart: failed to initialize database", e);
@@ -96,6 +100,120 @@ public class AppContextListener implements ServletContextListener {
         userDAO.create(seller); // becomes seller_id = 2, matching seed.sql product rows
 
         log.info("YogaMart: seeded admin@yogamart.local and seller@yogamart.local (see README for passwords).");
+    }
+
+    /**
+     * Runs seed.sql only if the products table is currently empty — prevents
+     * duplicate product rows piling up every time the app restarts against
+     * the same persistent H2 data file (bug found during MVP dev: products
+     * were re-inserted, with no existence check, on every single run).
+     */
+    private void seedProductsIfEmpty(JdbcDataSource ds) throws SQLException, IOException {
+        try (Connection conn = ds.getConnection();
+             Statement stmt = conn.createStatement();
+             java.sql.ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM products")) {
+            rs.next();
+            if (rs.getInt(1) > 0) {
+                return; // already seeded
+            }
+        }
+        runScript(ds, "/seed.sql");
+    }
+
+    /**
+     * Safety net for the seed-duplication bug found during MVP dev
+     * (see seedProductsIfEmpty's comment): removes exact duplicate
+     * product rows — same seller, name, description, price, stock,
+     * category, and image — keeping only the earliest-id copy of each.
+     *
+     * Runs unconditionally on every startup rather than being gated,
+     * because it is idempotent: once duplicates are cleared, running
+     * this again finds nothing to delete. This both fixes any
+     * duplicates already sitting in an existing data file from before
+     * seedProductsIfEmpty's guard existed, and protects against any
+     * future re-introduction of the same bug.
+     */
+    private void deduplicateProducts(JdbcDataSource ds) throws SQLException {
+        String sql = "DELETE FROM products p WHERE p.id NOT IN (" +
+                "SELECT MIN(id) FROM products " +
+                "GROUP BY seller_id, name, description, price, stock_qty, category, image_url)";
+        try (Connection conn = ds.getConnection();
+             Statement stmt = conn.createStatement()) {
+            int removed = stmt.executeUpdate(sql);
+            if (removed > 0) {
+                log.info("YogaMart: removed {} duplicate product row(s).", removed);
+            }
+        }
+    }
+
+    /**
+     * Backfills real product photos onto an already-seeded database (one
+     * that predates the switch from via.placeholder.com text placeholders
+     * to real Wikimedia Commons photos) and adds two new catalog items.
+     *
+     * Runs unconditionally on every startup, same idempotency approach as
+     * deduplicateProducts(): each UPDATE just re-sets the same URL every
+     * time (harmless no-op once applied), and each INSERT is guarded by
+     * a "does a product with this name already exist for this seller"
+     * check, so re-running never creates duplicates.
+     */
+    private void refreshSeedProductImagesAndAddNew(JdbcDataSource ds) throws SQLException {
+        String[][] imageUpdates = {
+                {"Digital Thermometer", "https://commons.wikimedia.org/wiki/Special:FilePath/Digital%20thermometer.jpg?width=500"},
+                {"First Aid Kit - Compact", "https://commons.wikimedia.org/wiki/Special:FilePath/First%20Aid%20Kit.png?width=500"},
+                {"Multivitamin Tablets (60ct)", "https://commons.wikimedia.org/wiki/Special:FilePath/B%20vitamin%20supplement%20tablets.jpg?width=500"},
+                {"Blood Pressure Monitor", "https://commons.wikimedia.org/wiki/Special:FilePath/Blood%20pressure%20measurement.jpg?width=500"},
+                {"N95 Face Masks (Pack of 10)", "https://commons.wikimedia.org/wiki/Special:FilePath/N95%20respirator%20transparent.png?width=500"},
+                {"Hand Sanitizer 500ml", "https://commons.wikimedia.org/wiki/Special:FilePath/Purell%20hand%20sanitizer%20gel%20in%20bottle%20%288487014501%29.jpg?width=500"}
+        };
+
+        try (Connection conn = ds.getConnection()) {
+            String updateSql = "UPDATE products SET image_url = ? WHERE name = ?";
+            try (PreparedStatement ps = conn.prepareStatement(updateSql)) {
+                for (String[] row : imageUpdates) {
+                    ps.setString(1, row[1]);
+                    ps.setString(2, row[0]);
+                    ps.executeUpdate();
+                }
+            }
+
+            addProductIfMissing(conn, "Omega-3 Fish Oil Capsules",
+                    "Daily omega-3 fish oil softgels for heart and joint health.",
+                    "699.00", 80, "Supplements",
+                    "https://commons.wikimedia.org/wiki/Special:FilePath/Omega%203%20capsules%20in%20white%20bottle%20%2852715127894%29.jpg?width=500");
+
+            addProductIfMissing(conn, "Surgical Face Masks (Pack of 50)",
+                    "3-ply disposable surgical face masks, box of 50.",
+                    "399.00", 120, "Personal Protection",
+                    "https://commons.wikimedia.org/wiki/Special:FilePath/3M%20Surgical%20N95%20Respirator.png?width=500");
+        }
+    }
+
+    private void addProductIfMissing(Connection conn, String name, String description, String price,
+                                      int stockQty, String category, String imageUrl) throws SQLException {
+        String checkSql = "SELECT COUNT(*) FROM products WHERE name = ? AND seller_id = 2";
+        try (PreparedStatement check = conn.prepareStatement(checkSql)) {
+            check.setString(1, name);
+            try (ResultSet rs = check.executeQuery()) {
+                rs.next();
+                if (rs.getInt(1) > 0) {
+                    return; // already added on a previous startup
+                }
+            }
+        }
+
+        String insertSql = "INSERT INTO products (seller_id, name, description, price, stock_qty, category, image_url) " +
+                "VALUES (2, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement insert = conn.prepareStatement(insertSql)) {
+            insert.setString(1, name);
+            insert.setString(2, description);
+            insert.setBigDecimal(3, new java.math.BigDecimal(price));
+            insert.setInt(4, stockQty);
+            insert.setString(5, category);
+            insert.setString(6, imageUrl);
+            insert.executeUpdate();
+        }
+        log.info("YogaMart: added new sample product '{}'.", name);
     }
 
     private void runScript(JdbcDataSource ds, String classpathResource) throws SQLException, IOException {
