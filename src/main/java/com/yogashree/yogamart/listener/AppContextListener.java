@@ -56,8 +56,8 @@ public class AppContextListener implements ServletContextListener {
             runScript(dataSource, "/schema.sql");
             seedUsersIfEmpty(dataSource);
             seedProductsIfEmpty(dataSource);
-            deduplicateProducts(dataSource);
             refreshSeedProductImagesAndAddNew(dataSource);
+            deduplicateProducts(dataSource);
             log.info("YogaMart: schema initialized and seed data loaded.");
         } catch (SQLException | IOException e) {
             log.error("YogaMart: failed to initialize database", e);
