@@ -8,17 +8,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/site.css">
 </head>
 <body>
-<header class="site-header">
-    <div class="wrap bar">
-        <a class="brand" href="${pageContext.request.contextPath}/products"><img class="logo" src="${pageContext.request.contextPath}/assets/img/logo.png" alt="YogaMart">YogaMart</a>
-        <div class="nav-links">
-            <span>Hi, <strong><c:out value="${sessionScope.userName}"/></strong></span>
-            <span class="pill-role"><c:out value="${sessionScope.userRole}"/></span>
-            <a href="${pageContext.request.contextPath}/products">Browse</a>
-            <a class="logout" href="${pageContext.request.contextPath}/logout">Log out</a>
-        </div>
-    </div>
-</header>
+<jsp:include page="_nav.jsp"/>
 
 <div class="wrap">
     <h1 class="section-title" style="margin-top:28px;">My Products</h1>
