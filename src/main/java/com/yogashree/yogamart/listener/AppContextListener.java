@@ -127,7 +127,7 @@ public class AppContextListener implements ServletContextListener {
      * category, and image — keeping only the earliest-id copy of each.
      *
      * Runs unconditionally on every startup rather than being gated,
-     * because it is idempotent: once duplicates are cleared, running
+     * because it is idempotent: once c are cleared, running
      * this again finds nothing to delete. This both fixes any
      * duplicates already sitting in an existing data file from before
      * seedProductsIfEmpty's guard existed, and protects against any
