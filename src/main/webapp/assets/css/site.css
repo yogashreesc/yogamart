@@ -589,3 +589,48 @@ a.action.delete-link { color: var(--danger); }
   font-size: 0.85em;
   margin: 60px 0 30px;
 }
+/* ---------- Grid card quick-add (green Add button) ---------- */
+a.card-link-inner {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.stock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.stock-row .stock {
+  font-size: 0.85em;
+  color: var(--muted);
+}
+
+.quick-add-form {
+  margin: 0;
+}
+
+.btn-quick-add {
+  margin-top: 0;
+  padding: 5px 16px;
+  background: white;
+  color: #16a34a;
+  border: 1.5px solid #16a34a;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8em;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.btn-quick-add:hover {
+  background: #16a34a;
+  color: white;
+}
+
+.btn-quick-add:active {
+  transform: scale(0.95);
+}
