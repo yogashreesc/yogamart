@@ -8,6 +8,7 @@
             <span>Hi, <strong><c:out value="${sessionScope.userName}"/></strong></span>
             <span class="pill-role"><c:out value="${sessionScope.userRole}"/></span>
             <a href="${pageContext.request.contextPath}/products">Browse</a>
+            <a href="${pageContext.request.contextPath}/cart">&#128722; Cart</a>
             <c:if test="${sessionScope.userRole == 'SELLER'}">
                 <a href="${pageContext.request.contextPath}/seller/products">My Products</a>
             </c:if>
