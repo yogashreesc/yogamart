@@ -53,15 +53,26 @@
 
     <div class="grid">
         <c:forEach var="p" items="${products}">
-            <a class="card card-link" href="${pageContext.request.contextPath}/products/view?id=${p.id}">
-                <div class="thumb">
-                    <img src="${p.imageUrl}" alt="${fn:escapeXml(p.name)}">
+            <div class="card">
+                <a class="card-link-inner" href="${pageContext.request.contextPath}/products/view?id=${p.id}">
+                    <div class="thumb">
+                        <img src="${p.imageUrl}" alt="${fn:escapeXml(p.name)}">
+                    </div>
+                    <h3><c:out value="${p.name}"/></h3>
+                    <div class="category"><c:out value="${p.category}"/></div>
+                    <div class="price">&#8377;<c:out value="${p.price}"/></div>
+                </a>
+                <div class="stock-row">
+                    <span class="stock">Stock: <c:out value="${p.stockQty}"/></span>
+                    <c:if test="${p.stockQty > 0}">
+                        <form method="post" action="${pageContext.request.contextPath}/cart/add" class="quick-add-form">
+                            <input type="hidden" name="productId" value="${p.id}">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn-quick-add">Add</button>
+                        </form>
+                    </c:if>
                 </div>
-                <h3><c:out value="${p.name}"/></h3>
-                <div class="category"><c:out value="${p.category}"/></div>
-                <div class="price">&#8377;<c:out value="${p.price}"/></div>
-                <div class="stock">Stock: <c:out value="${p.stockQty}"/></div>
-            </a>
+            </div>
         </c:forEach>
     </div>
 
