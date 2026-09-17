@@ -53,7 +53,7 @@
 
     <div class="grid">
         <c:forEach var="p" items="${products}">
-            <div class="card">
+            <a class="card card-link" href="${pageContext.request.contextPath}/products/view?id=${p.id}">
                 <div class="thumb">
                     <img src="${p.imageUrl}" alt="${fn:escapeXml(p.name)}">
                 </div>
@@ -61,7 +61,7 @@
                 <div class="category"><c:out value="${p.category}"/></div>
                 <div class="price">&#8377;<c:out value="${p.price}"/></div>
                 <div class="stock">Stock: <c:out value="${p.stockQty}"/></div>
-            </div>
+            </a>
         </c:forEach>
     </div>
 
