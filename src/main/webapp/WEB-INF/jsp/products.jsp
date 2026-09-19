@@ -64,7 +64,7 @@
                 </a>
                 <div class="stock-row">
                     <span class="stock">Stock: <c:out value="${p.stockQty}"/></span>
-                    <c:if test="${p.stockQty > 0 && sessionScope.uesrRole == 'BUYER'}"
+                    <c:if test="${p.stockQty > 0 && sessionScope.userRole == 'BUYER'}">
                         <form method="post" action="${pageContext.request.contextPath}/cart/add" class="quick-add-form">
                             <input type="hidden" name="productId" value="${p.id}">
                             <input type="hidden" name="quantity" value="1">
