@@ -644,6 +644,16 @@ a.card-link-inner {
   z-index: 999;
   transition: opacity 0.4s ease;
 }
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  transition: opacity 0.4s ease;
+}
 #splash-screen img {
   width: 100px;
   height: 100px;
