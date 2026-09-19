@@ -668,3 +668,50 @@ a.card-link-inner {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.06); }
 }
+/* ---------- Order confirmation (F5) ---------- */
+.confirmation-banner {
+  text-align: center;
+  background: var(--mint-100);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  margin: 28px 0;
+  animation: fadeInUp 0.4s ease both;
+}
+
+.confirmation-icon {
+  width: 56px;
+  height: 56px;
+  line-height: 56px;
+  border-radius: 50%;
+  background: var(--teal-700);
+  color: white;
+  font-size: 1.6em;
+  margin: 0 auto 14px;
+}
+
+.confirmation-banner h1 {
+  color: var(--teal-900);
+  margin: 0 0 6px;
+}
+
+.confirmation-banner p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.btn-checkout {
+  display: inline-block;
+  margin-top: 0;
+  padding: 12px 24px;
+  background: var(--teal-700);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.btn-checkout:hover { background: var(--teal-900); }
+.btn-checkout:active { transform: scale(0.97); }
