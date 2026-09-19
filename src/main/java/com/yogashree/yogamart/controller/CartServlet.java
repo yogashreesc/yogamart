@@ -74,6 +74,11 @@ public class CartServlet extends HttpServlet {
 
     private void handleAdd(HttpServletRequest req, HttpServletResponse resp, int userId)
             throws IOException {
+                Object role = req.getSession().getAttribute("userRole");
+if (!"BUYER".equals(role)) {
+    resp.sendRedirect(req.getContextPath() + "/products");
+    return;
+}
         try {
             int productId = Integer.parseInt(req.getParameter("productId"));
             int quantity = parseQuantity(req.getParameter("quantity"));

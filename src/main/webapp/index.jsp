@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/css/site.css">
 </head>
 <body>
+<div id="splash-screen">
+    <img src="<%= request.getContextPath() %>/assets/img/logo.png" alt="YogaMart">
+</div>
 <header class="landing-header">
     <div class="wrap bar">
         <span class="brand"><img class="logo" src="<%= request.getContextPath() %>/assets/img/logo.png" alt="YogaMart">YogaMart</span>
@@ -67,5 +70,15 @@
 
     <p class="landing-footer">YogaMart — a student capstone project. &copy; 2026.</p>
 </div>
+
+<script>
+    window.addEventListener('load', function () {
+        var splash = document.getElementById('splash-screen');
+        setTimeout(function () {
+            splash.classList.add('hide');
+            setTimeout(function () { splash.style.display = 'none'; }, 400);
+        }, 700);
+    });
+</script>
 </body>
 </html>
