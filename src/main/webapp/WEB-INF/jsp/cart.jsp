@@ -61,7 +61,7 @@
 
         <div class="cart-summary">
             <div class="cart-total-line">Total: <span>&#8377;<c:out value="${cartTotal}"/></span></div>
-            <button class="btn-checkout" disabled title="Checkout is coming next (F5)">Proceed to Checkout</button>
+            <a class="btn-checkout" href="${pageContext.request.contextPath}/checkout">Proceed to Checkout</a>
         </div>
     </c:if>
 
