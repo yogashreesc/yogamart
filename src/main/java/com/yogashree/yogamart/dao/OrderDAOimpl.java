@@ -39,6 +39,9 @@ public class OrderDAOImpl implements OrderDAO {
             int orderId = insertOrder(conn, buyerId, total);
 
             for (CartLineItem item : cartItems) {
+                // Decrement stock atomically: the WHERE clause re-checks
+                // live stock in the same statement, so a concurrent sale
+                // can't oversell between the cart page and this moment.
                 int updated = decrementStock(conn, item.getProductId(), item.getQuantity());
                 if (updated == 0) {
                     conn.rollback();
@@ -57,6 +60,7 @@ public class OrderDAOImpl implements OrderDAO {
                 try {
                     conn.rollback();
                 } catch (SQLException ignored) {
+                    // best-effort rollback; original exception is what matters
                 }
             }
             throw e;
