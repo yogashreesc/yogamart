@@ -11,8 +11,8 @@ Anna University R2025 Semester 3 Capstone (Java / Servlets / JDBC track).
 | Servlet container | Tomcat 9.0.x (`javax.servlet.*`) |
 | Build tool | Maven |
 | Database | H2 (embedded for dev, server mode for deployment) |
-| Password hashing | jBCrypt |
-| View layer | JSP + JSTL |
+| Password hashing | jBCrypt ||
+| View layer | JSP + JSTL ||
 | Testing | JUnit 5 + Mockito |
 | Logging | SLF4J + Logback |
 
