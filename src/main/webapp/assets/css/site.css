@@ -715,3 +715,19 @@ a.card-link-inner {
 
 .btn-checkout:hover { background: var(--teal-900); }
 .btn-checkout:active { transform: scale(0.97); }
+/* ---------- Order status pills (F6) ---------- */
+.status-pill {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 0.78em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.status-PENDING { background: #fef3c7; color: #92400e; }
+.status-CONFIRMED { background: var(--mint-100); color: var(--teal-700); }
+.status-SHIPPED { background: #dbeafe; color: #1e40af; }
+.status-DELIVERED { background: #dcfce7; color: #166534; }
+.status-CANCELLED { background: #fdeaec; color: var(--danger); }
