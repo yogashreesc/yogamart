@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -72,6 +74,20 @@ public class UserDAOImpl implements UserDAO {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<User> findAll() throws SQLException {
+        String sql = "SELECT id, name, email, password_hash, role, created_at FROM users ORDER BY created_at DESC";
+        List<User> users = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                users.add(mapRow(rs));
+            }
+        }
+        return users;
     }
 
     private User mapRow(ResultSet rs) throws SQLException {
