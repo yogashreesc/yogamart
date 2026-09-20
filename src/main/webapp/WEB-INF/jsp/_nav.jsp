@@ -16,6 +16,11 @@
                 <a href="${pageContext.request.contextPath}/seller/products">My Products</a>
                 <a href="${pageContext.request.contextPath}/seller/orders">Incoming Orders</a>
             </c:if>
+            <c:if test="${sessionScope.userRole == 'ADMIN'}">
+                <a href="${pageContext.request.contextPath}/admin/users">Users</a>
+                <a href="${pageContext.request.contextPath}/admin/orders">Orders</a>
+                <a href="${pageContext.request.contextPath}/admin/products">Moderate</a>
+            </c:if>
             <a class="logout" href="${pageContext.request.contextPath}/logout">Log out</a>
         </div>
     </div>
