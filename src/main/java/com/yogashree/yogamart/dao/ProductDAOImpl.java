@@ -142,7 +142,6 @@ public class ProductDAOImpl implements ProductDAO {
             return ps.executeUpdate() > 0;
         }
     }
-
     @Override
     public boolean delete(int id, int sellerId) throws SQLException {
         // Same ownership guard as update(): WHERE clause scopes the delete to this seller.
