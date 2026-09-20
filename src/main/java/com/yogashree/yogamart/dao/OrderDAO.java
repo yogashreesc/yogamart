@@ -1,5 +1,6 @@
 package com.yogashree.yogamart.dao;
 
+import com.yogashree.yogamart.dto.AdminOrderSummary;
 import com.yogashree.yogamart.dto.CartLineItem;
 import com.yogashree.yogamart.dto.OrderLineItem;
 import com.yogashree.yogamart.dto.SellerOrderLine;
@@ -34,4 +35,9 @@ public interface OrderDAO {
      * for any of this seller's products, across all buyers.
      */
     List<SellerOrderLine> findLineItemsForSeller(int sellerId) throws SQLException;
+
+    /**
+     * F7 — admin's "view all orders" list, across every buyer.
+     */
+    List<com.yogashree.yogamart.dto.AdminOrderSummary> findAllForAdmin() throws SQLException;
 }
