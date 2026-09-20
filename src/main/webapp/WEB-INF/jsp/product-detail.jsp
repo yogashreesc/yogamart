@@ -34,7 +34,7 @@
                 <p class="error">${param.cartError}</p>
             </c:if>
 
-            <c : if test="${product.stockQty > 0 && sessionScope.uesrRole == 'BUYER'}"
+            <c:if test="${product.stockQty > 0 && sessionScope.userRole == 'BUYER'}">
                 <form method="post" action="${pageContext.request.contextPath}/cart/add" class="add-to-cart-form">
                     <input type="hidden" name="productId" value="${product.id}">
                     <label for="quantity">Quantity</label>
