@@ -4,6 +4,7 @@ import com.yogashree.yogamart.dao.CartDAO;
 import com.yogashree.yogamart.dao.OrderDAO;
 import com.yogashree.yogamart.dto.CartLineItem;
 import com.yogashree.yogamart.dto.OrderLineItem;
+import com.yogashree.yogamart.dto.SellerOrderLine;
 import com.yogashree.yogamart.exception.InsufficientStockException;
 import com.yogashree.yogamart.exception.ValidationException;
 import com.yogashree.yogamart.model.Order;
@@ -58,5 +59,12 @@ public class OrderService {
 
     public List<Order> getOrdersForBuyer(int buyerId) throws SQLException {
         return orderDAO.findByBuyer(buyerId);
+    }
+
+    /**
+     * F6 — seller's incoming orders view.
+     */
+    public List<SellerOrderLine> getSellerOrderLines(int sellerId) throws SQLException {
+        return orderDAO.findLineItemsForSeller(sellerId);
     }
 }
