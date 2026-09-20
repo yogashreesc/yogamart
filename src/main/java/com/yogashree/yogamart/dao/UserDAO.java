@@ -3,6 +3,7 @@ package com.yogashree.yogamart.dao;
 import com.yogashree.yogamart.model.User;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,4 +18,9 @@ public interface UserDAO {
     Optional<User> findByEmail(String email) throws SQLException;
 
     Optional<User> findById(int id) throws SQLException;
+
+    /**
+     * F7 — admin's "view all users" list.
+     */
+    List<User> findAll() throws SQLException;
 }

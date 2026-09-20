@@ -155,6 +155,16 @@ public class ProductDAOImpl implements ProductDAO {
         }
     }
 
+    @Override
+    public boolean deleteAsAdmin(int id) throws SQLException {
+        String sql = "DELETE FROM products WHERE id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
     private Product mapRow(ResultSet rs) throws SQLException {
         Product p = new Product();
         p.setId(rs.getInt("id"));
