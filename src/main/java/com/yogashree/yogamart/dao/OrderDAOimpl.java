@@ -1,5 +1,6 @@
 package com.yogashree.yogamart.dao;
 
+import com.yogashree.yogamart.dto.AdminOrderSummary;
 import com.yogashree.yogamart.dto.CartLineItem;
 import com.yogashree.yogamart.dto.OrderLineItem;
 import com.yogashree.yogamart.dto.SellerOrderLine;
@@ -200,6 +201,28 @@ public class OrderDAOImpl implements OrderDAO {
             }
         }
         return lines;
+    }
+
+    @Override
+    public List<AdminOrderSummary> findAllForAdmin() throws SQLException {
+        String sql = "SELECT o.id AS order_id, u.name AS buyer_name, o.status, o.total_amount, o.created_at " +
+                "FROM orders o JOIN users u ON u.id = o.buyer_id " +
+                "ORDER BY o.created_at DESC";
+        List<AdminOrderSummary> results = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                AdminOrderSummary summary = new AdminOrderSummary();
+                summary.setOrderId(rs.getInt("order_id"));
+                summary.setBuyerName(rs.getString("buyer_name"));
+                summary.setStatus(rs.getString("status"));
+                summary.setTotalAmount(rs.getBigDecimal("total_amount"));
+                summary.setCreatedAt(rs.getTimestamp("created_at"));
+                results.add(summary);
+            }
+        }
+        return results;
     }
 
     private Order mapOrder(ResultSet rs) throws SQLException {
