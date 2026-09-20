@@ -21,4 +21,11 @@ public interface ProductDAO {
     boolean update(Product product) throws SQLException;
 
     boolean delete(int id, int sellerId) throws SQLException;
+
+    /**
+     * F7 — admin moderation: removes a listing regardless of seller,
+     * unlike delete() above which is ownership-scoped. Only ever
+     * called from an admin-gated route.
+     */
+    boolean deleteAsAdmin(int id) throws SQLException;
 }
