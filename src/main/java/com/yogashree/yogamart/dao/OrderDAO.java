@@ -2,6 +2,7 @@ package com.yogashree.yogamart.dao;
 
 import com.yogashree.yogamart.dto.CartLineItem;
 import com.yogashree.yogamart.dto.OrderLineItem;
+import com.yogashree.yogamart.dto.SellerOrderLine;
 import com.yogashree.yogamart.exception.InsufficientStockException;
 import com.yogashree.yogamart.model.Order;
 
@@ -27,4 +28,10 @@ public interface OrderDAO {
     List<OrderLineItem> findLineItems(int orderId) throws SQLException;
 
     List<Order> findByBuyer(int buyerId) throws SQLException;
+
+    /**
+     * F6 — seller's incoming orders: one row per order_items entry
+     * for any of this seller's products, across all buyers.
+     */
+    List<SellerOrderLine> findLineItemsForSeller(int sellerId) throws SQLException;
 }
