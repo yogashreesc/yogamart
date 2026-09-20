@@ -2,6 +2,7 @@ package com.yogashree.yogamart.dao;
 
 import com.yogashree.yogamart.dto.CartLineItem;
 import com.yogashree.yogamart.dto.OrderLineItem;
+import com.yogashree.yogamart.dto.SellerOrderLine;
 import com.yogashree.yogamart.exception.InsufficientStockException;
 import com.yogashree.yogamart.model.Order;
 
@@ -164,6 +165,37 @@ public class OrderDAOImpl implements OrderDAO {
             }
         }
         return orders;
+    }
+
+    @Override
+    public List<SellerOrderLine> findLineItemsForSeller(int sellerId) throws SQLException {
+        String sql = "SELECT o.id AS order_id, o.status, o.created_at, u.name AS buyer_name, " +
+                "p.name AS product_name, oi.quantity, oi.unit_price " +
+                "FROM order_items oi " +
+                "JOIN orders o ON o.id = oi.order_id " +
+                "JOIN products p ON p.id = oi.product_id " +
+                "JOIN users u ON u.id = o.buyer_id " +
+                "WHERE p.seller_id = ? " +
+                "ORDER BY o.created_at DESC";
+        List<SellerOrderLine> lines = new ArrayList<>();
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, sellerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    SellerOrderLine line = new SellerOrderLine();
+                    line.setOrderId(rs.getInt("order_id"));
+                    line.setOrderStatus(rs.getString("status"));
+                    line.setOrderDate(rs.getTimestamp("created_at"));
+                    line.setBuyerName(rs.getString("buyer_name"));
+                    line.setProductName(rs.getString("product_name"));
+                    line.setQuantity(rs.getInt("quantity"));
+                    line.setUnitPrice(rs.getBigDecimal("unit_price"));
+                    lines.add(line);
+                }
+            }
+        }
+        return lines;
     }
 
     private Order mapOrder(ResultSet rs) throws SQLException {
